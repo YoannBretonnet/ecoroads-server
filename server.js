@@ -1,11 +1,19 @@
-const express = require ('express');
+/* eslint-disable prefer-destructuring */
+/*
+ * Require
+ */
+const express = require('express');
+const bodyParser = require('body-parser');
+const Server = require('http').Server;
 
-const serverless = require('serverless-http');
 
-const app = express ();
+/*
+ * Vars
+ */
+const app = express();
+const server = Server(app);
 
-const router = express.Router();
-
+const port = 3001;
 
 const db = {
   users: {
@@ -22,15 +30,32 @@ const db = {
   }
 };
 
-router.get('/', (req, res) => {
-     res.send(`
+/*
+ * Express
+ */
+app.use(bodyParser.json());
+app.use((request, response, next) => {
+  response.header('Access-Control-Allow-Origin', '*');
+  // response.header('Access-Control-Allow-Credentials', true);
+  response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  next();
+});
+
+
+
+// Page d'accueil du serveur : GET /
+app.get('/', (request, response) => {
+  response.send(`
     <div style="margin: 5em auto; width: 400px; line-height: 1.5">
     <p>Server has been launched<p>
     </div>
   `);
 });
 
-router.post('/login', (request, response) => {
+
+// Login avec vérification : POST /login
+app.post('/login', (request, response) => {
   console.log('>> POST /login', request.body);
 
   // Extraction des données de la requête provenant du client.
@@ -55,8 +80,9 @@ router.post('/login', (request, response) => {
   }
 });
 
-app.use('/.netlify/functions/api', router);
-
-
-
-module.exports.handler = serverless(app);
+/*
+ * Server
+ */
+server.listen(port, () => {
+  console.log(`listening on *:${port}`);
+});
