@@ -1,4 +1,5 @@
 const express = require ('express');
+const bodyParser = require('body-parser');
 
 const serverless = require('serverless-http');
 
@@ -21,6 +22,16 @@ const db = {
     },
   }
 };
+
+
+router.use(bodyParser.json());
+router.use((request, response, next) => {
+ response.header('Access-Control-Allow-Origin', '*');
+ // response.header('Access-Control-Allow-Credentials', true);
+ response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+ response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+ next();
+});
 
 router.get('/', (req, res) => {
      res.send(`
