@@ -6,6 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Server = require('http').Server;
 
+const interestPoints = require('./src/interestpoint.js')
 
 /*
  * Vars
@@ -15,25 +16,25 @@ const server = Server(app);
 
 const port = 3001;
 
+
 const db = {
   users: {
     'john@chat.io': {
-      password: 'test',
+      password: 'ecoroads2023',
       username: 'John',
-      color: '#c23616',
     },
     'carol@chat.io': {
-      password: 'test',
+      password: 'ecoroads2023',
       username: 'Carol',
-      color: '#009432',
     },
   }
 };
 
+
 /*
  * Express
  */
-app.use(bodyParser.json());
+  app.use(bodyParser.json());
 app.use((request, response, next) => {
   response.header('Access-Control-Allow-Origin', '*');
   // response.header('Access-Control-Allow-Credentials', true);
@@ -73,6 +74,30 @@ app.post('/login', (request, response) => {
     response.json({
       pseudo: username,
     });
+  }
+  else {
+    console.log('<< 401 UNAUTHORIZED');
+    response.status(401).end();
+  }
+});
+
+
+// Récupération des points d'intérêt : POST /map
+app.post('/map', (request, response) => {
+  console.log('>> POST /map', request.body);
+
+  // Extraction des données de la requête provenant du client.
+  const { categories } = request.body;
+
+  // Récupération des point(s d'intérêt correspondant à la sélection
+  const arrayResponse = interestPoints.filter(option => categories.includes(option.category))
+  console.log (arrayResponse);
+  
+  // Réponse HTTP adaptée.
+  if (arrayResponse) {
+    response.json({ 
+      arrayResponse
+      });   
   }
   else {
     console.log('<< 401 UNAUTHORIZED');
