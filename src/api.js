@@ -1,20 +1,11 @@
-/* eslint-disable prefer-destructuring */
-/*
- * Require
- */
-const express = require('express');
+const express = require ('express');
 const bodyParser = require('body-parser');
-const Server = require('http').Server;
 
-const interestPoints = require('./src/interestpoint.js')
+const serverless = require('serverless-http');
 
-/*
- * Vars
- */
-const app = express();
-const server = Server(app);
+const app = express ();
 
-const port = 3001;
+const router = express.Router();
 
 
 const db = {
@@ -22,41 +13,35 @@ const db = {
     'john@chat.io': {
       password: 'ecoroads2023',
       username: 'John',
+      color: '#c23616',
     },
     'carol@chat.io': {
       password: 'ecoroads2023',
       username: 'Carol',
+      color: '#009432',
     },
   }
 };
 
 
-/*
- * Express
- */
-  app.use(bodyParser.json());
-app.use((request, response, next) => {
-  response.header('Access-Control-Allow-Origin', '*');
-  // response.header('Access-Control-Allow-Credentials', true);
-  response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  next();
+router.use(bodyParser.json());
+router.use((request, response, next) => {
+ response.header('Access-Control-Allow-Origin', '*');
+ // response.header('Access-Control-Allow-Credentials', true);
+ response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+ response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+ next();
 });
 
-
-
-// Page d'accueil du serveur : GET /
-app.get('/', (request, response) => {
-  response.send(`
+router.get('/', (req, res) => {
+     res.send(`
     <div style="margin: 5em auto; width: 400px; line-height: 1.5">
     <p>Server has been launched<p>
     </div>
   `);
 });
 
-
-// Login avec vérification : POST /login
-app.post('/login', (request, response) => {
+router.post('/login', (request, response) => {
   console.log('>> POST /login', request.body);
 
   // Extraction des données de la requête provenant du client.
@@ -107,9 +92,6 @@ app.post('/map', (request, response) => {
 
 app.use('/.netlify/functions/api', router);
 
-/*
- * Server
- */
-server.listen(port, () => {
-  console.log(`listening on *:${port}`);
-});
+
+
+module.exports.handler = serverless(app);
