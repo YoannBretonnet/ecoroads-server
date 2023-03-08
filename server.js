@@ -105,6 +105,8 @@ app.post('/map', (request, response) => {
   }
 });
 
+app.use('/.netlify/functions/api', router);
+
 /*
  * Server
  */

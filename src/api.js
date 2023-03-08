@@ -6,6 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Server = require('http').Server;
 
+const interestPoints = require('./src/interestpoint.js')
 
 /*
  * Vars
@@ -19,22 +20,21 @@ const port = 3001;
 const db = {
   users: {
     'john@chat.io': {
-      password: 'test',
+      password: 'ecoroads2023',
       username: 'John',
     },
     'carol@chat.io': {
-      password: 'test',
+      password: 'ecoroads2023',
       username: 'Carol',
     },
   }
 };
 
 
-
 /*
  * Express
  */
-app.use(bodyParser.json());
+  app.use(bodyParser.json());
 app.use((request, response, next) => {
   response.header('Access-Control-Allow-Origin', '*');
   // response.header('Access-Control-Allow-Credentials', true);
@@ -91,18 +91,21 @@ app.post('/map', (request, response) => {
 
   // Récupération des point(s d'intérêt correspondant à la sélection
   const arrayResponse = interestPoints.filter(option => categories.includes(option.category))
+  console.log (arrayResponse);
   
   // Réponse HTTP adaptée.
   if (arrayResponse) {
-    response.json({
+    response.json({ 
       arrayResponse
-    });
+      });   
   }
   else {
     console.log('<< 401 UNAUTHORIZED');
     response.status(401).end();
   }
 });
+
+app.use('/.netlify/functions/api', router);
 
 /*
  * Server
