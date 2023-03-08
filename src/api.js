@@ -7,6 +7,8 @@ const app = express ();
 
 const router = express.Router();
 
+const interestPoints = require('./interestpoint.js')
+
 
 const db = {
   users: {

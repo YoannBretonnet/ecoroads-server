@@ -8,6 +8,8 @@ const Server = require('http').Server;
 
 const interestPoints = require('./src/interestpoint.js')
 
+const router = express.Router();
+
 /*
  * Vars
  */
