@@ -30,6 +30,7 @@ router.use((request, response, next) => {
  // response.header('Access-Control-Allow-Credentials', true);
  response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
  response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+ 
  next();
 });
 
@@ -68,7 +69,7 @@ router.post('/login', (request, response) => {
 
 
 // Récupération des points d'intérêt : POST /map
-app.post('/map', (request, response) => {
+router.post('/map', (request, response) => {
   console.log('>> POST /map', request.body);
 
   // Extraction des données de la requête provenant du client.
